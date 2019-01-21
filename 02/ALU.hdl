@@ -43,32 +43,32 @@ CHIP ALU {
 
     PARTS:
     // if zx == 1, x[] = 0
-    Mux16(a = false, b = x, sel = zx, out = xZeroProcessed);
+    Mux16(a = x, b = false, sel = zx, out = xZeroProcessed);
 
     // if nx == 1, x[] = !x[]
     Not16(in = xZeroProcessed, out = xInverted);
     Mux16(a = xZeroProcessed, b = xInverted, sel = nx, out = xNegProcessed);
 
     // if zy == 1, y[] = 0
-    Mux16(a = false, b = y, sel = zy, out = yZeroProcessed);
+    Mux16(a = y, b = false, sel = zy, out = yZeroProcessed);
 
     // if ny == 1, y[] = !y[]
     Not16(in = yZeroProcessed, out = yInverted);
     Mux16(a = yZeroProcessed, b = yInverted, sel = ny, out = yNegProcessed);
 
-    // if f == 1, out = x + y; if f == 0, out = x && y
+    // if f == 0, out = x && y; if f == 1, out = x + y
     Add16(a = xNegProcessed, b = yNegProcessed, out = added);
-    And16Way(a = xNegProcessed, b = yNegProcessed, out = anded);
-    Mux16(a = added, b[0] = anded, b[1..15] = false, sel = f, out = functionProcessed);
+    And16(a = xNegProcessed, b = yNegProcessed, out = anded);
+    Mux16(a = anded, b = added, sel = f, out = functionProcessed);
 
     // if no == 1, invert output
     Not16(in = functionProcessed, out = functionNegated);
-    Mux16(a = functionProcessed, b = functionNegated, sel = no, out[0..15] = fullNegProcessed, out[15] = msd);
+    Mux16(a = functionProcessed, b = functionNegated, sel = no, out[0..15] = fullNegProcessed, out[15] = msd, out[0..15] = out);
 
     // if output == 0, zr = 1
     Or16Way(in = fullNegProcessed, out = isNotZero);
     Not(in = isNotZero, out = zr);
 
     // if output represents a negative number, ng = 1
-    Or(a = false, b = msd, out = ng);
+    And(a = msd, b = msd, out = ng);
 }
