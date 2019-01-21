@@ -58,8 +58,8 @@ CHIP ALU {
 
     // if f == 1, out = x + y; if f == 0, out = x && y
     Add16(a = xNegProcessed, b = yNegProcessed, out = added);
-    And16(a = xNegProcessed, b = yNegProcessed, out = anded);
-    Mux16(a = added, b = anded, sel = f, out = functionProcessed);
+    And16Way(a = xNegProcessed, b = yNegProcessed, out = anded);
+    Mux16(a = added, b[0] = anded, b[1..15] = false, sel = f, out = functionProcessed);
 
     // if no == 1, invert output
     Not16(in = functionProcessed, out = functionNegated);
