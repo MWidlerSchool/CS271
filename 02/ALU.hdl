@@ -63,7 +63,7 @@ CHIP ALU {
 
     // if no == 1, invert output
     Not16(in = functionProcessed, out = functionNegated);
-    Mux16(a = functionProcessed, b = functionNegated, sel = no, out = fullNegProcessed, out[15] = msd);
+    Mux16(a = functionProcessed, b = functionNegated, sel = no, out[0..15] = fullNegProcessed, out[15] = msd);
 
     // if output == 0, zr = 1
     Or16Way(in = fullNegProcessed, out = isNotZero);
