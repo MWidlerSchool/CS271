@@ -16,5 +16,11 @@ CHIP PC {
     OUT out[16];
 
     PARTS:
-    // Put your code here:
+    SelChip(load = load, inc = inc, reset = reset, addLoad = addLoad, addOld = addOld, addOne = addOne, kickRegister = kickRegister);
+    Mux16(a[0..15] = false, b = old, sel = addOld, out = oldOut);
+    Mux16(a[0..15] = false, b = in, sel = addLoad, out = loadOut);
+    Mux16(a[0..15] = false, b[0] = true, b[1..15] = false, sel = addOne, out = oneOut);
+    Or16(a = oldOut, b = loadOut, out = sum1);
+    Add16(a = oneOut, b = sum1, out = sum2);
+    Register(in = sum2, load = kickRegister, out = out, out = old);
 }
