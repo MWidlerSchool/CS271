@@ -39,5 +39,28 @@ CHIP CPU {
         pc[15];          // address of next instruction
 
     PARTS:
-    // Put your code here:
+        // for readability
+        Not(in = instruction[15], out = isACommand);
+        Or(a = instruction[15], b = false, out = isCCommand);
+        
+        ARegister(in = aRegIn, load = aLoad, out = aRegOut, out[0..14] = addressM);
+        DRegister(in = aluOut, load = dLoad, out = dRegOut);
+        PC(in = aRegOut, load = jump, inc = true, reset = reset, out[0..14] = pc);
+        Mux16(a = aluOut, b = instruction, sel = isACommand, out = aRegIn);                 // a register mux
+        Mux16(a = aRegOut, b = inM, sel = instruction[12], out = aluIn);    // ALU mux
+        ALU(x = dRegOut, y = aluIn, 
+            zx = instruction[11], nx = instruction[10], zy = instruction[9], ny = instruction[8], f = instruction[7], no = instruction[6], 
+            out = aluOut, zr = isZero, ng = isNegative, out = outM);
+        And(a = instruction[15], b = instruction[3], out = writeM);                            // writeM out
+        Or(a = isACommand, b = instruction[5], out = aLoad);
+        And(a = isCCommand, b = instruction[4], out = dLoad);
+        
+        Not(in = isZero, out = isNotZero);
+        Not(in = isNegative, out = isNotNegative);
+        And(a = isNotZero, b = isNotNegative, out = isPositive);
+        And(a = isPositive, b = instruction[0], out = posJumpOkay);
+        And(a = isZero, b = instruction[1], out = zeroJumpOkay);
+        And(a = isNegative, b = instruction[2], out = negJumpOkay);
+        Or8Way(in[0] = posJumpOkay, in[1] = zeroJumpOkay, in[2] = negJumpOkay, out = subJump);
+        And(a = subJump, b = isCCommand, out = jump);
 }
