@@ -27,5 +27,25 @@ CHIP Memory {
     OUT out[16];
 
     PARTS:
-    // Put your code here:
+    // any address needing the last pin is not in memory
+    Not(in = address[14], out = memAdr);
+    And(a = memAdr, b = load, out = memLoad);	
+
+    // screen extends up through 101111111111111
+    Not(in = address[13], out = not13);
+    And(a = address[14], b = not13, out = scrAdr);
+    And(a = scrAdr, b = load, out = scrLoad);
+
+    // keyboard is at 110000000000000, and is the highest memory address
+    And(a = address[13], b = address[14], out = keyAdr);
+    
+    // main chips
+    RAM16K(in = in, load = memLoad, address = address[0..13], out = ramOut);
+    Screen(in = in, load = scrLoad, address = address[0..12], out = scrOut);
+    Keyboard(out = keyOut);
+
+    // output routing. RAM output is sent to ins a and b because if load == false, ramOut = srcOut = keyOut = false
+    Mux8Way16(b = ramOut, c = scrOut, e = keyOut, sel[0] = memAdr, sel[1] = scrAdr, sel[2] = keyAdr, out = out);
+
+    
 }
