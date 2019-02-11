@@ -60,16 +60,11 @@ public class FileProcessor
             // is a command
             if(str.charAt(0) != '(')
             {
-                newList.add(str);/*
-                // variable
-                if(str.charAt(0) == '@' && Character.isLetter(str.charAt(1)))
-                    HackConstants.add(str.substring(1, str.length()));*/
+                newList.add(str);
             }
             // is a constant declaration
             else
             {
-         //       int refLoc = getNextCommand(stringList, i + 1);
-           //     HackConstants.add(str.substring(1, str.length() - 1), refLoc);
                 HackConstants.add(str.substring(1, str.length() - 1), newList.size());
             }
         }

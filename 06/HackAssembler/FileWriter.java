@@ -8,35 +8,51 @@ public class FileWriter
     public static final int NEGATIVE_SHIFT = (int)Math.pow(2, 13);
     public static final String C_INSTRUCTION_PREFIX = "111";
     private static String errorString = "";
+    private static String errorLine = "";
     
     public static String getErrorString(){return errorString;}
+    public static String getErrorLine(){return errorLine;}
     
     public static boolean save(String inFile, Vector<String> asmList)
 	{
         String outFileName = inFile.replaceAll(".asm", ".hack");
 		PrintWriter outFile;
 		errorString = "";
+		errorLine = "";
+        Vector<String> commandList = new Vector<String>();
 		try
 		{
-			outFile = new PrintWriter(outFileName);
-            
 			for(String str : asmList)
+				commandList.add(getInstruction(str));
+                
+			outFile = new PrintWriter(outFileName);
+			for(String str : commandList)
 				outFile.println(getInstruction(str));
 			outFile.close();
 		}
 		catch(Exception ex)
         {
-            errorString = ex.getCause().toString();
             return false;
         }
         return true;
 	}
     
-    public static String getInstruction(String str)
+    public static String getInstruction(String str) throws Exception
     {
+        String com = "";
         if(str.charAt(0) == '@')
-            return getAInstruction(str);
-        return getCInstruction(str);
+            com = getAInstruction(str);
+        else
+            com = getCInstruction(str);
+        
+        // unexecutable command
+        if(com.equals("1110000000000000") && !str.equals(""))
+        {
+            errorLine = "Unknown command: " + str;
+            throw new Exception("Bad command");
+        }
+        
+        return com;
     }
     
     // converts the passed string to it's A instruction binary form. Does not error check

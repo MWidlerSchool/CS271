@@ -52,6 +52,8 @@ public class HackAssemblerGUI extends JFrame implements ActionListener
         textArea.setFocusable(false);
         mainPanel.add(textArea);
         
+        reset();
+        
         setVisible(true);
     }
     
@@ -69,13 +71,13 @@ public class HackAssemblerGUI extends JFrame implements ActionListener
         {
             case 0: textArea.setText("Select a file to load.");
                     break;
-            case 1: textArea.setText(String.format("File %s loaded and compiled.", FileLoader.getFileName()));
+            case 1: textArea.setText(String.format("File %s loaded.", FileLoader.getFileName()));
                     break;
-            case 2: textArea.setText(String.format("File %s failed to compile.", FileLoader.getFileName()));
+            case 2: textArea.setText(String.format("File %s failed to load.", FileLoader.getFileName()));
                     break;
-            case 3: textArea.setText(String.format("File %s saved.", FileLoader.getFileName().replaceAll(".asm", ".hack")));
+            case 3: textArea.setText(String.format("File %s compiled and saved.", FileLoader.getFileName().replaceAll(".asm", ".hack")));
                     break;
-            case 4: textArea.setText(String.format("File %s failed to save:\n%s", FileLoader.getFileName().replaceAll(".asm", ".hack"),
+            case 4: textArea.setText(String.format("File %s failed to compile or save: %s", FileLoader.getFileName().replaceAll(".asm", ".hack"),
                                                                                   FileWriter.getErrorString()));
                     break;
             case 5: textArea.setText("You must successfully load a file before you can save it.");
@@ -92,9 +94,9 @@ public class HackAssemblerGUI extends JFrame implements ActionListener
             Vector<String> stringList = FileLoader.loadFile(this);
             if(stringList.size() > 0)
             {
-            stringList = FileProcessor.compile(stringList);
-            cleanCode = stringList;
-            updateState(1);
+                stringList = FileProcessor.compile(stringList);
+                cleanCode = stringList;
+                updateState(1);
             }
             else
             {
@@ -115,6 +117,10 @@ public class HackAssemblerGUI extends JFrame implements ActionListener
                 else
                 {
                     updateState(4);
+                    if(FileWriter.getErrorLine().equals("") == false)
+                    {
+                        textArea.append("\n" + FileWriter.getErrorLine());
+                    }
                 }
             }
             // nothing to save
