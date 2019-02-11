@@ -28,7 +28,7 @@ public class HackConstants
         
         // I/O pointers
         add("SCREEN", 16384);
-        add("LCL", 24576);
+        add("KBD", 24576);
     }
     
     
@@ -57,6 +57,14 @@ public class HackConstants
                 return valueList.elementAt(i);
         }
         return -1;
+    }
+    
+    public static boolean has(String k)
+    {
+        for(String str : keyList)
+            if(str.equals(k))
+                return true;
+        return false;
     }
     
     public static void test1()

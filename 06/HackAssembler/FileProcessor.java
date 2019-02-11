@@ -53,27 +53,35 @@ public class FileProcessor
     {
         Vector<String> newList = new Vector<String>();
         String str;
-        // set constants and variables
+        // set constants
         for(int i = 0; i < stringList.size(); i++)
         {
             str = stringList.elementAt(i);
             // is a command
             if(str.charAt(0) != '(')
             {
-                newList.add(str);
+                newList.add(str);/*
                 // variable
                 if(str.charAt(0) == '@' && Character.isLetter(str.charAt(1)))
-                    HackConstants.add(str.substring(1, str.length()));
+                    HackConstants.add(str.substring(1, str.length()));*/
             }
             // is a constant declaration
             else
             {
-                int refLoc = getNextCommand(stringList, i + 1);
-                HackConstants.add(str.substring(1, str.length() - 1), refLoc);
+         //       int refLoc = getNextCommand(stringList, i + 1);
+           //     HackConstants.add(str.substring(1, str.length() - 1), refLoc);
+                HackConstants.add(str.substring(1, str.length() - 1), newList.size());
             }
         }
         stringList = newList;
         newList = new Vector<String>();
+        // set variables
+        for(int i = 0; i < stringList.size(); i++)
+        {
+            str = stringList.elementAt(i);
+            if(str.charAt(0) == '@' && Character.isLetter(str.charAt(1)) && HackConstants.has(str.substring(1)) == false)
+                HackConstants.add(str.substring(1, str.length()));
+        }
         
         // replace variables
         String newStr = "";
@@ -85,19 +93,7 @@ public class FileProcessor
                 newStr = curStr;
             newList.add(newStr);
         }
-        
         return newList;
-    }
-    
-    // returns the index of the next line which is not a constant declaration
-    private static int getNextCommand(Vector<String> stringList, int index)
-    {
-        for(int i = index; i < stringList.size(); i++)
-        {
-            if(stringList.elementAt(i).charAt(0) != '(')
-                return i;
-        }
-        return -1;
     }
     
     

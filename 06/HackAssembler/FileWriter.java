@@ -56,7 +56,6 @@ public class FileWriter
         }
         
         String bin = Integer.toBinaryString(decimal);
-        System.out.println(decimal + " = " + bin);
         // two seperate statements to not mess up unsigned numbers
         if(isNegative == 1)
             bin = String.format("%d%14s", isNegative, bin);
@@ -161,26 +160,13 @@ public class FileWriter
         
         return returnStr;
     }
-    
-    private static String twosComplement(String orig)
-    {
-        String newStr = "";
-    /*    for(char c : orig)
-        {
-            if(c == '0')
-                newStr += '1';
-            else
-                newStr += '0';
-        }*/
-        return newStr;
-    }
 
     
     
     public static void test1()
     {
-        System.out.println(" " + getBinaryString(25));
-        System.out.println(getAInstruction("@25"));
+        System.out.println(" " + getBinaryString(28));
+        System.out.println(getAInstruction("@28"));
         System.out.println(" " + getBinaryString(-1));
         System.out.println(getAInstruction("@-1"));
     }
@@ -194,7 +180,7 @@ public class FileWriter
     
     public static void main(String[] args)
     {
-        //test1();
-        test2();
+        test1();
+        //test2();
     }
 }

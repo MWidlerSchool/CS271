@@ -77,30 +77,12 @@ public class HackAssemblerGUI extends JFrame implements ActionListener
             Vector<String> stringList = FileLoader.loadFile(this);
             updateState(1);
             stringList = FileProcessor.compile(stringList);
-            /*
-            for(String str : stringList)
-            {
-                textArea.append(str + "\n");
-            }
-            HackConstants.test1();*/
             cleanCode = stringList;
             updateState(2);
         }
         
         if(ae.getSource() == assembleButton)
         {
-          ////////////////////////////
-         /*   JFileChooser c = new JFileChooser();
-            int rVal = c.showSaveDialog(this);
-            if (rVal == JFileChooser.APPROVE_OPTION) 
-            {
-                
-            }
-            if (rVal == JFileChooser.CANCEL_OPTION) 
-            {
-            
-            }*/
-          ////////////////////////////
             FileWriter.save(FileLoader.getFileName(), cleanCode);
         }
         
