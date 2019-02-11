@@ -7,14 +7,15 @@ import java.util.*;
 
 public class HackAssemblerGUI extends JFrame implements ActionListener
 {
-    public static final int FRAME_WIDTH = 1000;
-    public static final int FRAME_HEIGHT = 400;
+    public static final int FRAME_WIDTH = 700;
+    public static final int FRAME_HEIGHT = 200;
     
     private JButton loadButton;
     private JButton assembleButton;
     private JTextArea textArea;
     private int state = 0;
-    private Vector<String> cleanCode = null;
+    private Vector<String> cleanCode = new Vector<String>();
+    private Font font = new Font("Monospaced", Font.PLAIN, 18);
     
     public HackAssemblerGUI()
     {
@@ -34,23 +35,31 @@ public class HackAssemblerGUI extends JFrame implements ActionListener
         mainPanel.add(subpanel);
         
         loadButton = new JButton("Load .asm file");
+        loadButton.setFont(font);
         loadButton.addActionListener(this);
         subpanel.add(loadButton);
         
         assembleButton = new JButton("Assemble into .hack file");
+        assembleButton.setFont(font);
         assembleButton.addActionListener(this);
         subpanel.add(assembleButton);
         
         textArea = new JTextArea("Text area.");
+        textArea.setFont(font);
         textArea.setEditable(false);
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
         textArea.setFocusable(false);
         mainPanel.add(textArea);
         
-        HackConstants.init();
-        
         setVisible(true);
+    }
+    
+    public void reset()
+    {
+        cleanCode = new Vector<String>();
+        HackConstants.init();
+        updateState(0);
     }
     
     public void updateState(int newState)
@@ -58,13 +67,18 @@ public class HackAssemblerGUI extends JFrame implements ActionListener
         state = newState;
         switch(state)
         {
-            case 0: textArea.setText("No file loaded.");
+            case 0: textArea.setText("Select a file to load.");
                     break;
-            case 1: textArea.setText(String.format("Processing file %s.", FileLoader.getFileName()));
+            case 1: textArea.setText(String.format("File %s loaded and compiled.", FileLoader.getFileName()));
                     break;
-            case 2: textArea.setText(String.format("File %s loaded and compiled.", FileLoader.getFileName()));
+            case 2: textArea.setText(String.format("File %s failed to compile.", FileLoader.getFileName()));
                     break;
-            case 3: textArea.setText(String.format("File %s failed to compile.", FileLoader.getFileName()));
+            case 3: textArea.setText(String.format("File %s saved.", FileLoader.getFileName().replaceAll(".asm", ".hack")));
+                    break;
+            case 4: textArea.setText(String.format("File %s failed to save:\n%s", FileLoader.getFileName().replaceAll(".asm", ".hack"),
+                                                                                  FileWriter.getErrorString()));
+                    break;
+            case 5: textArea.setText("You must successfully load a file before you can save it.");
                     break;
             default: textArea.setText("I dunno what's going on, man.");
         }
@@ -74,16 +88,41 @@ public class HackAssemblerGUI extends JFrame implements ActionListener
     {
         if(ae.getSource() == loadButton)
         {
+            this.reset();
             Vector<String> stringList = FileLoader.loadFile(this);
-            updateState(1);
+            if(stringList.size() > 0)
+            {
             stringList = FileProcessor.compile(stringList);
             cleanCode = stringList;
-            updateState(2);
+            updateState(1);
+            }
+            else
+            {
+                updateState(2);
+            }
         }
         
         if(ae.getSource() == assembleButton)
         {
-            FileWriter.save(FileLoader.getFileName(), cleanCode);
+            if(cleanCode.size() > 0)
+            {
+                // successful save
+                if(FileWriter.save(FileLoader.getFileName(), cleanCode))
+                {
+                    updateState(3);
+                }
+                // exception thrown
+                else
+                {
+                    updateState(4);
+                }
+            }
+            // nothing to save
+            else
+            {
+                updateState(5);
+            }
+            
         }
         
     }

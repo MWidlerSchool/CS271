@@ -8,7 +8,7 @@ import javax.swing.*;
 
 public class FileLoader
 {
-    private static JFileChooser fc = new JFileChooser();
+    private static JFileChooser fc = new JFileChooser("..");
     private static String fileName = "";
     private static File file;
     private static Vector<String> stringList = new Vector<String>();

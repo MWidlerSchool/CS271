@@ -7,12 +7,15 @@ public class FileWriter
 {
     public static final int NEGATIVE_SHIFT = (int)Math.pow(2, 13);
     public static final String C_INSTRUCTION_PREFIX = "111";
+    private static String errorString = "";
     
-    public static void save(String inFile, Vector<String> asmList)
+    public static String getErrorString(){return errorString;}
+    
+    public static boolean save(String inFile, Vector<String> asmList)
 	{
         String outFileName = inFile.replaceAll(".asm", ".hack");
 		PrintWriter outFile;
-		
+		errorString = "";
 		try
 		{
 			outFile = new PrintWriter(outFileName);
@@ -21,8 +24,12 @@ public class FileWriter
 				outFile.println(getInstruction(str));
 			outFile.close();
 		}
-		catch(FileNotFoundException fnfEx){System.out.println("File not found exception");}
-		catch(Exception ex){System.out.println("Exception");}
+		catch(Exception ex)
+        {
+            errorString = ex.getCause().toString();
+            return false;
+        }
+        return true;
 	}
     
     public static String getInstruction(String str)
