@@ -25,7 +25,17 @@ public class FileLoader
         {
             file = fc.getSelectedFile();
             fileName = file.getAbsolutePath();
-            getStrings();
+            if(fileName.endsWith(".asm"))
+            {
+                getStrings();
+            }
+            else
+            {
+                fileName = "";
+                String errMsg = "Target file must be a .asm file.";
+                JOptionPane.showMessageDialog(parent, errMsg, "Woah, Bummer", JOptionPane.ERROR_MESSAGE);
+            }
+            
         } 
         else 
         {           

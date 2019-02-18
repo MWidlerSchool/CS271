@@ -27,7 +27,7 @@ public class FileWriter
                 
 			outFile = new PrintWriter(outFileName);
 			for(String str : commandList)
-				outFile.println(getInstruction(str));
+				outFile.println(str);
 			outFile.close();
 		}
 		catch(Exception ex)
@@ -46,7 +46,7 @@ public class FileWriter
             com = getCInstruction(str);
         
         // unexecutable command
-        if(com.equals("1110000000000000") && !str.equals(""))
+        if(com.equals("1110000000000000") && (!str.equals("")))
         {
             errorLine = "Unknown command: " + str;
             throw new Exception("Bad command");
@@ -204,6 +204,6 @@ public class FileWriter
     public static void main(String[] args)
     {
         test1();
-        //test2();
+        test2();
     }
 }
