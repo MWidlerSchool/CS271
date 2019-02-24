@@ -15,7 +15,7 @@ public class FileWriter
     
     public static boolean save(String inFile, Vector<String> asmList)
 	{
-        String outFileName = inFile.replaceAll(".asm", ".hack");
+        String outFileName = inFile.replaceAll(".vm", ".asm");
 		PrintWriter outFile;
 		errorString = "";
 		errorLine = "";

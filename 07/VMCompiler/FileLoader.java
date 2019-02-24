@@ -25,14 +25,14 @@ public class FileLoader
         {
             file = fc.getSelectedFile();
             fileName = file.getAbsolutePath();
-            if(fileName.endsWith(".asm"))
+            if(fileName.endsWith(".vm"))
             {
                 getStrings();
             }
             else
             {
                 fileName = "";
-                String errMsg = "Target file must be a .asm file.";
+                String errMsg = "Target file must be a .vm file.";
                 JOptionPane.showMessageDialog(parent, errMsg, "Woah, Bummer", JOptionPane.ERROR_MESSAGE);
             }
             

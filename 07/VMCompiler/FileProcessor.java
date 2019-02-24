@@ -7,12 +7,12 @@ public class FileProcessor
 {
     public static Vector<String> compile(Vector<String> stringList)
     {
- //       stringList = cleanStrings(stringList);
+        stringList = cleanStrings(stringList);
    //     stringList = setConstants(stringList);
         return stringList;
     }
-    /*
-    // remove whitespace and comments from strings, set constants
+    
+    // remove comments, leading whitespace, and trailing whitespace
     public static Vector<String> cleanStrings(Vector<String> stringList)
     {
         Vector<String> newList = new Vector<String>();
@@ -21,7 +21,7 @@ public class FileProcessor
         for(String str : stringList)
         {
             String newStr = "";
-            // a one-character command will be ignored, but the minimum legal Hack command is two characters.
+            // a one-character command will be ignored, but this is less than the minimum legal command
             for(int i = 0; i < str.length() - 1; i++)
             {
                 if(str.charAt(i) == '/' && str.charAt(i + 1) == '/')
@@ -30,19 +30,9 @@ public class FileProcessor
                 if(i == str.length() - 2)
                     newStr += str.charAt(i + 1);
             }
+            // remove leading and trailing whitespace and add to new list.
             if(newStr.length() > 0)
-                newList.add(newStr);
-        }
-        stringList = newList;
-        newList = new Vector<String>();
-        
-        // remove all whitespace, removing empty lines
-        String newStr = "";
-        for(String str : stringList)
-        {
-            newStr = str.replaceAll("\\s", "");
-            if(newStr.length() > 0)
-                newList.add(newStr);
+                newList.add(newStr.trim());
         }
         
         return newList;
