@@ -7,11 +7,53 @@ public class FileProcessor
 {
     public static Vector<String> compile(Vector<String> stringList)
     {
-        stringList = cleanStrings(stringList);
-        Vector<VMLine> lineList = convertStrings(stringList);
-        test2(stringList, lineList);
+        VMCommand.init();
+        stringList = cleanStrings(stringList);                  // clean strings
+        Vector<VMLine> lineList = convertStrings(stringList);   // convert to constants and ints
+        stringList = convertLineList(lineList);                 // convert to .asm
         
         return stringList;
+    }
+    
+    // returns asm code
+    public static Vector<String> convertLineList(Vector<VMLine> lineList)
+    {
+        // initialize the stack pointer
+        Vector<String> asmList = VMCommand.initStack();
+        
+        // add the code
+        for(VMLine line : lineList)
+            asmList = VMCommand.concat(asmList, convertLineItem(line));
+        
+        // add terminating infinite loop
+        asmList = VMCommand.concat(asmList, VMCommand.terminal());
+        return asmList;
+    }
+    
+    public static Vector<String> convertLineItem(VMLine line)
+    {
+        Vector<String> asmList = new Vector<String>();
+        
+        // single-word commands
+        if(line.arg1.isArithmeticOrLogical())
+        {
+            asmList = VMCommand.arithmeticOp(line.arg1);
+        }
+        // pushes
+        else if(line.arg1 == VMConstants.PUSH)
+        {
+            if(line.arg2 == VMConstants.CONSTANT)
+            {
+                asmList = VMCommand.pushConstant(line.arg3);
+            }
+        }
+        // pop
+        else if(line.arg1 == VMConstants.POP)
+        {
+        
+        }
+        
+        return asmList;
     }
     
     // remove comments, leading whitespace, and trailing whitespace

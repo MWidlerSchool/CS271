@@ -37,6 +37,14 @@ public enum VMConstants
         value = v;
     }
     
+    public boolean isArithmeticOrLogical()
+    {
+        if(this.ordinal() >= ADD.ordinal() && this.ordinal() <= NOT.ordinal())
+            return true;
+        return false;
+    }
+    
+    // essentially a constructor
     public static VMConstants get(String str)
     {
         str = str.toUpperCase();

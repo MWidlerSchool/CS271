@@ -14,7 +14,7 @@ public class VMCompilerGUI extends JFrame implements ActionListener
     private JButton assembleButton;
     private JTextArea textArea;
     private int state = 0;
-    private Vector<String> cleanCode = new Vector<String>();
+    private Vector<String> vmCode = new Vector<String>();
     private Font font = new Font("Monospaced", Font.PLAIN, 18);
     
     public VMCompilerGUI()
@@ -59,8 +59,7 @@ public class VMCompilerGUI extends JFrame implements ActionListener
     
     public void reset()
     {
-        cleanCode = new Vector<String>();
-        //HackConstants.init();
+        vmCode = new Vector<String>();
         updateState(0);
     }
     
@@ -75,10 +74,9 @@ public class VMCompilerGUI extends JFrame implements ActionListener
                     break;
             case 2: textArea.setText(String.format("File %s failed to load.", FileLoader.getFileName()));
                     break;
-            case 3: textArea.setText(String.format("File %s compiled and saved.", FileLoader.getFileName().replaceAll(".asm", ".hack")));
+            case 3: textArea.setText(String.format("File %s compiled and saved.", FileLoader.getFileName().replaceAll(".vm", ".asm")));
                     break;
-            case 4: textArea.setText(String.format("File %s failed to compile or save: %s", FileLoader.getFileName().replaceAll(".asm", ".hack"),
-                                                                                  FileWriter.getErrorString()));
+            case 4: textArea.setText(String.format("File %s failed to load.", FileLoader.getFileName()));
                     break;
             case 5: textArea.setText("You must successfully load a file before you can save it.");
                     break;
@@ -95,7 +93,7 @@ public class VMCompilerGUI extends JFrame implements ActionListener
             if(stringList.size() > 0)
             {
                 stringList = FileProcessor.compile(stringList);
-                cleanCode = stringList;
+                vmCode = stringList;
                 updateState(1);
             }
             else
@@ -106,10 +104,10 @@ public class VMCompilerGUI extends JFrame implements ActionListener
         
         if(ae.getSource() == assembleButton)
         {
-            if(cleanCode.size() > 0)
+            if(vmCode.size() > 0)
             {
                 // successful save
-                if(FileWriter.save(FileLoader.getFileName(), cleanCode))
+                if(FileWriter.save(FileLoader.getFileName(), vmCode))
                 {
                     updateState(3);
                 }
@@ -117,10 +115,6 @@ public class VMCompilerGUI extends JFrame implements ActionListener
                 else
                 {
                     updateState(4);
-                    if(FileWriter.getErrorLine().equals("") == false)
-                    {
-                        textArea.append("\n" + FileWriter.getErrorLine());
-                    }
                 }
             }
             // nothing to save
