@@ -24,12 +24,46 @@ public enum VMConstants
     LT(1006),
     AND(1007),
     OR(1008),
-    NOT(1009);
+    NOT(1009),
+    
+    PUSH(2000),
+    POP(2001),
+    CONSTANT(2002);
     
     public int value;
     
     private VMConstants(int v)
     {
         value = v;
+    }
+    
+    public static VMConstants get(String str)
+    {
+        str = str.toUpperCase();
+        if(str.equals("ADD"))
+            return ADD;
+        else if(str.equals("SUB"))
+            return SUB;
+        else if(str.equals("NEG"))
+            return NEG;
+        else if(str.equals("EQ"))
+            return EQ;
+        else if(str.equals("GT"))
+            return GT;
+        else if(str.equals("LT"))
+            return LT;
+        else if(str.equals("AND"))
+            return AND;
+        else if(str.equals("OR"))
+            return OR;
+        else if(str.equals("NOT"))
+            return NOT;
+        else if(str.equals("PUSH"))
+            return PUSH;
+        else if(str.equals("POP"))
+            return POP;
+        else if(str.equals("CONSTANT"))
+            return CONSTANT;
+        return null;
     }
 }

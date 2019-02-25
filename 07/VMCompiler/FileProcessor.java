@@ -8,7 +8,9 @@ public class FileProcessor
     public static Vector<String> compile(Vector<String> stringList)
     {
         stringList = cleanStrings(stringList);
-   //     stringList = setConstants(stringList);
+        Vector<VMLine> lineList = convertStrings(stringList);
+        test2(stringList, lineList);
+        
         return stringList;
     }
     
@@ -37,58 +39,50 @@ public class FileProcessor
         
         return newList;
     }
-    /*
-    // removes constant declarations, updates the constant list, and replaces variables with literals. Assumes list has been cleaned.
-    private static Vector<String> setConstants(Vector<String> stringList)
+    
+    // converts processed string list into VMLine obj list
+    public static Vector<VMLine> convertStrings(Vector<String> stringList)
     {
-        Vector<String> newList = new Vector<String>();
-        String str;
-        // set constants
-        for(int i = 0; i < stringList.size(); i++)
-        {
-            str = stringList.elementAt(i);
-            // is a command
-            if(str.charAt(0) != '(')
-            {
-                newList.add(str);
-            }
-            // is a constant declaration
-            else
-            {
-                HackConstants.add(str.substring(1, str.length() - 1), newList.size());
-            }
-        }
-        stringList = newList;
-        newList = new Vector<String>();
-        // set variables
-        for(int i = 0; i < stringList.size(); i++)
-        {
-            str = stringList.elementAt(i);
-            if(str.charAt(0) == '@' && Character.isLetter(str.charAt(1)) && HackConstants.has(str.substring(1)) == false)
-                HackConstants.add(str.substring(1, str.length()));
-        }
+        Vector<VMLine> lineList = new Vector<VMLine>();
         
-        // replace variables
-        String newStr = "";
-        for(String curStr : stringList)
-        {
-            if(curStr.charAt(0) == '@' && Character.isLetter(curStr.charAt(1)))
-                newStr = "@" + HackConstants.get(curStr.substring(1));
-            else
-                newStr = curStr;
-            newList.add(newStr);
-        }
-        return newList;
-    }*/
+        for(String str : stringList)
+            lineList.add(new VMLine(str));
+        
+        return lineList;
+    }
     
     
-    private static void test1()
+    private static void test1(Vector<String> stringList)
     {
-
+        for(String str : stringList)
+        {
+            System.out.println(str);
+        }
+    }
+    
+    private static void test2(Vector<String> stringList, Vector<VMLine> lineList)
+    {
+        for(int i = 0; i < stringList.size(); i++)
+        {
+            VMLine line = lineList.elementAt(i);
+            String lineStr = line.arg1.toString();
+            if(line.arguments == 3)
+            {
+                lineStr += ", ";
+                lineStr += line.arg2 + "";
+                lineStr += ", ";
+                lineStr += "" + line.arg3;
+                
+                
+                //String.format(", %s, %d", line.arg2.toString(), line.arg3);
+            }
+            System.out.println(stringList.elementAt(i));
+            System.out.println(lineStr);
+        }
     }
     
     public static void main(String[] args)
     {
-        test1();
+        //test1();
     }
 }
