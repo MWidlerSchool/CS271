@@ -10,9 +10,9 @@ public enum VMConstants
     ARG(2),             // = RAM[2], argument pointer address
     THIS(3),            // = RAM[3], this pointer address
     THAT(4),            // = RAM[4], that pointer address
-    // RAM[5]-[12] hold the value(s) for temp
-    // RAM[13] - [15] are general purpose registers
-    // RAM[16] - [255] are for static variables
+    TEMP(5),            // RAM[5]-[12] hold the value(s) for temp
+    GENERAL(13),        // RAM[13] - [15] are general purpose registers
+    STATIC(16),         // RAM[16] - [255] are for static variables
     STACK_BASE(256),    // = RAM[256]
     HEAP_BASE(2048),    // = RAM[2048]
     
@@ -72,6 +72,20 @@ public enum VMConstants
             return POP;
         else if(str.equals("CONSTANT"))
             return CONSTANT;
+        else if(str.equals("THIS"))
+            return THIS;
+        else if(str.equals("THAT"))
+            return THAT;
+        else if(str.equals("ARGUMENT"))
+            return ARG;
+        else if(str.equals("STATIC"))
+            return STATIC;
+        else if(str.equals("LOCAL"))
+            return LCL;
+        else if(str.equals("TEMP"))
+            return TEMP;
+        else if(str.equals("GENERAL"))
+            return GENERAL;
         return null;
     }
 }

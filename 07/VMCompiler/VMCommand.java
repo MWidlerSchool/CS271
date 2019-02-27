@@ -61,27 +61,49 @@ public class VMCommand
         return insList;
     }
     
-    // pushes the contents of the D register into the passed location, or passed location + offset
-    public static Vector<String> pushSegment(VMConstants loc){return pushSegment(loc, 0);}
-    public static Vector<String> pushSegment(VMConstants loc, int offset)
+    // calculate the pointer location and put it in Temp[0] (R13)
+    private static Vector<String> storePointer(VMConstants loc, int offset)
     {
         int addressPointer = loc.value;
         Vector<String> insList = new Vector<String>();
-        insList.add("\n// Push segment[index]");
-        // store current D on in general-purpose register
-        insList.add("@R13");
-        insList.add("M=D");
-        // calculate pointer and store in another general-purpose register
+        insList.add("\n// Calculate pointer and store in temp[0]");
         insList.add("@" + addressPointer);
         insList.add("D=M");
         insList.add("@" + offset);
         insList.add("D=D+A");
-        insList.add("@R14");
-        insList.add("M=D");
-        // load value into D, pointer into A, and assign
         insList.add("@R13");
+        insList.add("M=D");
+        return insList;
+    }
+    
+    // pushes the contents passed location onto the stack, overwriting the original location with 0
+    public static Vector<String> pushSegment(VMConstants loc){return pushSegment(loc, 0);}
+    public static Vector<String> pushSegment(VMConstants loc, int offset)
+    {
+        Vector<String> insList = new Vector<String>();
+        insList.add("\n// Push segment[index]");
+        insList = concat(insList, storePointer(loc, offset));
+        insList.add("@R13");
+        insList.add("A=M");
         insList.add("D=M");
-        insList.add("@R14");
+        insList.add("@R13");
+        insList.add("A=M");
+  //      insList.add("M=0");
+        insList = concat(insList, pushD());
+        return insList;
+    }
+    
+    // pops the top of the stack to the passed location
+    public static Vector<String> popSegment(VMConstants loc){return pushSegment(loc, 0);}
+    public static Vector<String> popSegment(VMConstants loc, int offset)
+    {
+        int addressPointer = loc.value;
+        Vector<String> insList = new Vector<String>();
+        insList.add("\n// Pop segment[index]");
+        insList = concat(insList, storePointer(loc, offset));
+        insList = concat(insList, pop());
+        insList.add("D=A");
+        insList.add("@R13");
         insList.add("A=M");
         insList.add("M=D");
         return insList;

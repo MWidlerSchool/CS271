@@ -39,18 +39,25 @@ public class FileProcessor
         {
             asmList = VMCommand.arithmeticOp(line.arg1);
         }
-        // pushes
-        else if(line.arg1 == VMConstants.PUSH)
+        else    // multi-word commands
         {
-            if(line.arg2 == VMConstants.CONSTANT)
+            // pushes
+            if(line.arg1 == VMConstants.PUSH)
             {
-                asmList = VMCommand.pushConstant(line.arg3);
+                if(line.arg2 == VMConstants.CONSTANT)
+                {
+                    asmList = VMCommand.pushConstant(line.arg3);
+                }
+                else
+                {
+                    asmList = VMCommand.pushSegment(line.arg2, line.arg3);
+                }
             }
-        }
-        // pop
-        else if(line.arg1 == VMConstants.POP)
-        {
-            
+            // pops
+            else if(line.arg1 == VMConstants.POP)
+            {
+                asmList = VMCommand.popSegment(line.arg2, line.arg3);
+            }
         }
         
         return asmList;
