@@ -48,6 +48,10 @@ public class FileProcessor
                 {
                     asmList = VMCommand.pushConstant(line.arg3);
                 }
+                else if(line.arg2 == VMConstants.POINTER)
+                {
+                    asmList = VMCommand.pushPointer(line.arg3);
+                }
                 else
                 {
                     asmList = VMCommand.pushSegment(line.arg2, line.arg3);
@@ -56,7 +60,14 @@ public class FileProcessor
             // pops
             else if(line.arg1 == VMConstants.POP)
             {
-                asmList = VMCommand.popSegment(line.arg2, line.arg3);
+                if(line.arg2 == VMConstants.POINTER)
+                {
+                    asmList = VMCommand.popPointer(line.arg3);
+                }
+                else
+                {
+                    asmList = VMCommand.popSegment(line.arg2, line.arg3);
+                }
             }
         }
         

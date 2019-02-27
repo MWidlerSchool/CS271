@@ -28,7 +28,8 @@ public enum VMConstants
     
     PUSH(2000),
     POP(2001),
-    CONSTANT(2002);
+    CONSTANT(2002),
+    POINTER(3);
     
     public int value;
     
@@ -86,6 +87,8 @@ public enum VMConstants
             return TEMP;
         else if(str.equals("GENERAL"))
             return GENERAL;
+        else if(str.equals("POINTER"))
+            return POINTER;
         return null;
     }
 }

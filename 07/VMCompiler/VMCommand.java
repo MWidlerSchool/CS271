@@ -62,7 +62,7 @@ public class VMCommand
     }
     
     // calculate the pointer location and put it in Temp[0] (R13)
-    private static Vector<String> storePointer(VMConstants loc, int offset)
+    public static Vector<String> storePointer(VMConstants loc, int offset)
     {
         int addressPointer = loc.value;
         Vector<String> insList = new Vector<String>();
@@ -76,7 +76,7 @@ public class VMCommand
         return insList;
     }
     
-    // pushes the contents passed location onto the stack, overwriting the original location with 0
+    // pushes the contents passed location onto the stack
     public static Vector<String> pushSegment(VMConstants loc){return pushSegment(loc, 0);}
     public static Vector<String> pushSegment(VMConstants loc, int offset)
     {
@@ -86,9 +86,6 @@ public class VMCommand
         insList.add("@R13");
         insList.add("A=M");
         insList.add("D=M");
-        insList.add("@R13");
-        insList.add("A=M");
-  //      insList.add("M=0");
         insList = concat(insList, pushD());
         return insList;
     }
@@ -105,6 +102,31 @@ public class VMCommand
         insList.add("D=A");
         insList.add("@R13");
         insList.add("A=M");
+        insList.add("M=D");
+        return insList;
+    }
+    
+    // pushes pointer onto the stack
+    public static Vector<String> pushPointer(int offset)
+    {
+        int pointerIndex = VMConstants.POINTER.value + offset;
+        Vector<String> insList = new Vector<String>();
+        insList.add("\n// Push pointer[index]");
+        insList.add("@" + pointerIndex);
+        insList.add("D=M");
+        insList = concat(insList, pushD());
+        return insList;
+    }
+    
+    // pops the top of the stack to the passed pointer
+    public static Vector<String> popPointer(int offset)
+    {
+        int pointerIndex = VMConstants.POINTER.value + offset;
+        Vector<String> insList = new Vector<String>();
+        insList.add("\n// Pop pointer[index]");
+        insList = concat(insList, pop());
+        insList.add("D=A");
+        insList.add("@" + pointerIndex);
         insList.add("M=D");
         return insList;
     }
@@ -150,7 +172,7 @@ public class VMCommand
         return insList;
     }
     
-    private static String getArithmenticComment(VMConstants opType)
+    public static String getArithmenticComment(VMConstants opType)
     {
         String comment = "";
         switch(opType)
