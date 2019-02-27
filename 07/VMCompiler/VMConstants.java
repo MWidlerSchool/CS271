@@ -5,11 +5,11 @@ import java.util.*;
 // a self-initializing class for containing the constants used in a Hack program
 public enum VMConstants
 {
-    SP(0),              // = RAM[0]
-    LCL(1),             // = RAM[1]
-    ARG(2),             // = RAM[2]
-    THIS(3),            // = RAM[3]
-    THAT(4),            // = RAM[4]
+    SP(0),              // = RAM[0], stack pointer address
+    LCL(1),             // = RAM[1], local pointer address
+    ARG(2),             // = RAM[2], argument pointer address
+    THIS(3),            // = RAM[3], this pointer address
+    THAT(4),            // = RAM[4], that pointer address
     // RAM[5]-[12] hold the value(s) for temp
     // RAM[13] - [15] are general purpose registers
     // RAM[16] - [255] are for static variables

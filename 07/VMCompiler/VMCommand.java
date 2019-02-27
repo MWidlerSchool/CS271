@@ -33,7 +33,7 @@ public class VMCommand
         insList.add("// Initialize stack");
         insList.add("@256");
         insList.add("D=A");
-        insList.add("@0");
+        insList.add("@SP");
         insList.add("M=D");
         return insList;
     }
@@ -61,6 +61,33 @@ public class VMCommand
         return insList;
     }
     
+    // pushes the contents of the D register into the passed location, or passed location + offset
+    public static Vector<String> pushSegment(VMConstants loc){return pushSegment(loc, 0);}
+    public static Vector<String> pushSegment(VMConstants loc, int offset)
+    {
+        int addressPointer = loc.value;
+        Vector<String> insList = new Vector<String>();
+        insList.add("\n// Push segment[index]");
+        // store current D on in general-purpose register
+        insList.add("@R13");
+        insList.add("M=D");
+        // calculate pointer and store in another general-purpose register
+        insList.add("@" + addressPointer);
+        insList.add("D=M");
+        insList.add("@" + offset);
+        insList.add("D=D+A");
+        insList.add("@R14");
+        insList.add("M=D");
+        // load value into D, pointer into A, and assign
+        insList.add("@R13");
+        insList.add("D=M");
+        insList.add("@R14");
+        insList.add("A=M");
+        insList.add("M=D");
+        return insList;
+    }
+    
+    
     // pushes contents of the D register onto the stack
     public static Vector<String> pushD(){return pushD(true);}
     public static Vector<String> pushD(boolean noSupercall)
@@ -68,10 +95,10 @@ public class VMCommand
         Vector<String> insList = new Vector<String>();
         if(noSupercall)
             insList.add("\n// Push D register on to the stack");
-        insList.add("@0");
+        insList.add("@SP");
         insList.add("A=M");
         insList.add("M=D");
-        insList.add("@0");
+        insList.add("@SP");
         insList.add("M=M+1");
         return insList;
     }
@@ -83,7 +110,7 @@ public class VMCommand
         Vector<String> insList = new Vector<String>();
         if(noSupercall)
             insList.add("\n// Pop top of stack into the A register");
-        insList.add("@0");
+        insList.add("@SP");
         insList.add("M=M-1");
         insList.add("A=M");
         insList.add("A=M");
