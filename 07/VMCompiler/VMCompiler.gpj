@@ -29,3 +29,5 @@ a0	b68	c255	f%\011VMCompiler.jar	g%\011VMCompiler.zip	hManifest-Version\0111.0\0
 %\011FileProcessor.java
 %\011VMConstants.java
 %\011VMCompilerGUI.java
+!47;m
+RunSelect	APPLICATION:VMCompiler.VMCompilerGUI
