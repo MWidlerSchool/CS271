@@ -7,15 +7,16 @@ import java.util.*;
 
 public class VMCompilerGUI extends JFrame implements ActionListener
 {
-    public static final int FRAME_WIDTH = 700;
+    public static final int FRAME_WIDTH = 1000;
     public static final int FRAME_HEIGHT = 200;
     
     private JButton loadButton;
+    private JButton loadFolderButton;
     private JButton assembleButton;
     private JTextArea textArea;
     private int state = 0;
     private Vector<String> vmCode = new Vector<String>();
-    private Font font = new Font("Monospaced", Font.PLAIN, 18);
+    private Font font = new Font("Monospaced", Font.PLAIN, 16);
     
     public VMCompilerGUI()
     {
@@ -31,13 +32,18 @@ public class VMCompilerGUI extends JFrame implements ActionListener
         this.add(mainPanel);
         
         JPanel subpanel = new JPanel();
-        subpanel.setLayout(new GridLayout(1, 2));
+        subpanel.setLayout(new GridLayout(1, 3));
         mainPanel.add(subpanel);
         
         loadButton = new JButton("Load .vm file");
         loadButton.setFont(font);
         loadButton.addActionListener(this);
         subpanel.add(loadButton);
+        
+        loadFolderButton = new JButton("Load folder");
+        loadFolderButton.setFont(font);
+        loadFolderButton.addActionListener(this);
+        subpanel.add(loadFolderButton);
         
         assembleButton = new JButton("Assemble into .asm file");
         assembleButton.setFont(font);
@@ -68,7 +74,7 @@ public class VMCompilerGUI extends JFrame implements ActionListener
         state = newState;
         switch(state)
         {
-            case 0: textArea.setText("Select a file to load.");
+            case 0: textArea.setText("Select a file or folder to load.");
                     break;
             case 1: textArea.setText(String.format("File %s loaded.", FileLoader.getFileName()));
                     break;
@@ -90,6 +96,23 @@ public class VMCompilerGUI extends JFrame implements ActionListener
         {
             this.reset();
             Vector<String> stringList = FileLoader.loadFile(this);
+            if(stringList.size() > 0)
+            {
+                stringList = FileProcessor.compile(stringList);
+                vmCode = stringList;
+                updateState(1);
+            }
+            else
+            {
+                updateState(2);
+            }
+        }
+        
+        // loads all .vm files in a folder
+        if(ae.getSource() == loadFolderButton)
+        {
+            this.reset();
+            Vector<String> stringList = FileLoader.loadFolder(this);
             if(stringList.size() > 0)
             {
                 stringList = FileProcessor.compile(stringList);

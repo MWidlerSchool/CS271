@@ -12,8 +12,8 @@ s#i0
 s#k0
 s#j0
 s#l0
-!104;u
-a0	b68	c255	f%\011VMCompiler.jar	g%\011VMCompiler.zip	hManifest-Version\0111.0	iVMCompiler.VMCompilerGUI!149;g
+!146;u
+a0	b68	c255	f%\011VMCompiler.jar	g%\011VMCompiler.zip	hManifest-Version\0111.0\011Main-Class\011VMCompiler.VMCompilerGUI	iVMCompiler.VMCompilerGUI!149;g
 %\011FileWriter.java
 %\011VMCommand.java
 %\011FileLoader.java

@@ -10,7 +10,7 @@ public class FileProcessor
         VMCommand.init();
         stringList = cleanStrings(stringList);                  // clean strings
         Vector<VMLine> lineList = convertStrings(stringList);   // convert to constants and ints
-        stringList = convertLineList(lineList);                 // convert to .asm
+        stringList = convertLineList(lineList);                 // convert to .asm, prepending and appending as appropriated
         
         return stringList;
     }
